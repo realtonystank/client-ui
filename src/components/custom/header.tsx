@@ -11,7 +11,21 @@ import {
 import Link from "next/link";
 import { Phone, ShoppingBasket } from "lucide-react";
 import { Button } from "../ui/button";
-const Header = () => {
+import { Restaurant } from "@/lib/types";
+const Header = async () => {
+  const tenantResponse = await fetch(
+    `${process.env.BACKEND_URL}/api/auth/tenants?perPage=10000`,
+    {
+      next: {
+        revalidate: 3600, // 1 hour
+      },
+    }
+  );
+  if (!tenantResponse.ok) {
+    throw new Error("Failed to fetch tenants.");
+  }
+  const restaurants = await tenantResponse.json();
+
   return (
     <header className="bg-white flex justify-center">
       <nav className="container p-5 flex justify-between items-center">
@@ -23,15 +37,17 @@ const Header = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="antera" className="w-full">
-                  Antera
-                </SelectItem>
-                <SelectItem value="punjabi swag" className="w-full">
-                  Punjabi Swag
-                </SelectItem>
-                <SelectItem value="kfc" className="w-full">
-                  KFC
-                </SelectItem>
+                {restaurants?.data.map((restaurant: Restaurant) => {
+                  return (
+                    <SelectItem
+                      key={restaurant.id}
+                      value={restaurant.id}
+                      className={"w-full"}
+                    >
+                      {restaurant.name}
+                    </SelectItem>
+                  );
+                })}
               </SelectGroup>
             </SelectContent>
           </Select>
