@@ -12,14 +12,15 @@ import Image from "next/image";
 import React from "react";
 import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
+import { Product } from "@/lib/types";
 
-export type Product = {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-};
+// export type Product = {
+//   id: string;
+//   name: string;
+//   description: string;
+//   image: string;
+//   price: number;
+// };
 
 type PropTypes = {
   product: Product;
@@ -38,7 +39,7 @@ const ProductCard = ({ product }: PropTypes) => {
       <CardFooter className="flex justify-between">
         <p>
           <span>From&nbsp;&nbsp;&nbsp;</span>
-          <span className="font-bold">₹{product.price}</span>
+          <span className="font-bold">₹{100}</span>
         </p>
 
         <Dialog>
@@ -146,7 +147,7 @@ const ProductCard = ({ product }: PropTypes) => {
                 </div>
                 <ToppingList />
                 <div className="flex items-center justify-between mt-10">
-                  <span className="font-bold">&#8377; {product.price}</span>
+                  <span className="font-bold">&#8377; {100}</span>
                   <Button>
                     <ShoppingCart size={20} />
                     <span className="ml-2">Add to cart</span>
