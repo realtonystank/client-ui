@@ -8,18 +8,16 @@ export default async function Home() {
   return (
     <>
       <section className="bg-white flex justify-center py-10">
-        <div className="container px-35 flex justify-between items-center">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
           <div>
-            <h1 className="text-7xl font-black font-sans leading-2">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black font-sans leading-tight">
               Super Delicious Pizza in
-              <span className="text-primary block mt-15 ">
-                Only 45 minutes!
-              </span>
+              <span className="text-primary block ">Only 45 minutes!</span>
             </h1>
-            <p className="text-2xl mt-12 max-w-lg leading-snug">
+            <p className="text-base sm:text-lg lg:text-2xl mt-4 sm:mt-6 max-w-lg leading-snug">
               Enjoy a free meal if your order takes more than 45 mintues
             </p>
-            <Button className="mt-8 text-lg rounded-full py-7 px-6 font-bold">
+            <Button className="mt-6 sm:mt-8 text-base sm:text-lg rounded-full py-4 sm:py-5 px-6 font-bold">
               Get your pizza now
             </Button>
           </div>

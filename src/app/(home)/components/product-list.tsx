@@ -40,7 +40,7 @@ const ProductList = async () => {
           defaultValue={categories?.data[0]?._id}
           className=" container mx-auto"
         >
-          <TabsList className="grid  grid-cols-2">
+          <TabsList className="flex flex-wrap gap-2 justify-center sm:justify-start">
             {categories.data.map((category: Category) => {
               return (
                 <TabsTrigger
@@ -60,7 +60,7 @@ const ProductList = async () => {
                 value={category._id}
                 className="mt-6"
               >
-                <div className="grid grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                   {products.data
                     .filter(
                       (product: Product) => product.categoryId == category._id
