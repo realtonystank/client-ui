@@ -67,7 +67,11 @@ const ProductList = async () => {
                     )
                     .map((product: Product) => {
                       return (
-                        <ProductCard key={product._id} product={product} />
+                        <ProductCard
+                          key={product._id}
+                          product={product}
+                          categoryName={category.name}
+                        />
                       );
                     })}
                 </div>

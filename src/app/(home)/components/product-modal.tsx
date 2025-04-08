@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -8,7 +9,17 @@ import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Product } from "@/lib/types";
 
-const ProductModal = ({ product }: { product: Product }) => {
+const ProductModal = ({
+  product,
+  categoryName,
+}: {
+  product: Product;
+  categoryName: string;
+}) => {
+  const handleAddToCart = () => {
+    console.log("adding to cart...");
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -63,10 +74,10 @@ const ProductModal = ({ product }: { product: Product }) => {
                 </div>
               );
             })}
-            <ToppingList />
+            {categoryName.toLowerCase() === "pizza" && <ToppingList />}
             <div className="flex items-center justify-between mt-10">
               <span className="font-bold">&#8377; {100}</span>
-              <Button>
+              <Button onClick={handleAddToCart}>
                 <ShoppingCart size={20} />
                 <span className="ml-2">Add to cart</span>
               </Button>

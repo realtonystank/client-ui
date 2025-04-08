@@ -38,3 +38,11 @@ export interface Product {
   image: string;
   isPublished?: boolean;
 }
+
+export type Topping = {
+  _id: string;
+  name: string;
+  image: string;
+  price: number;
+  isAvailable: boolean;
+};

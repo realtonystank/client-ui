@@ -21,9 +21,10 @@ import ProductModal from "./product-modal";
 
 type PropTypes = {
   product: Product;
+  categoryName: string;
 };
 
-const ProductCard = ({ product }: PropTypes) => {
+const ProductCard = ({ product, categoryName }: PropTypes) => {
   return (
     <Card className="border-none rounded-xl">
       <CardHeader className="flex justify-center">
@@ -38,7 +39,7 @@ const ProductCard = ({ product }: PropTypes) => {
           <span>From&nbsp;&nbsp;&nbsp;</span>
           <span className="font-bold">₹{100}</span>
         </p>
-        <ProductModal product={product} />
+        <ProductModal product={product} categoryName={categoryName} />
       </CardFooter>
     </Card>
   );

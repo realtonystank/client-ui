@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
-import { Topping } from "./topping-list";
+import { Topping } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { CircleCheck } from "lucide-react";
 
@@ -17,7 +17,7 @@ const ToppingCard = ({
   handleCheckBoxCheck,
 }: ToppingCardProps) => {
   const isCurrentSelected = selectedToppings.some(
-    (element: Topping) => element.id === topping.id
+    (element: Topping) => element._id === topping._id
   );
   return (
     <Button
