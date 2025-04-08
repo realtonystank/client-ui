@@ -1,35 +1,13 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import ToppingCard from "./topping-card";
 import { Topping } from "@/lib/types";
-
-// const toppings = [
-//   {
-//     id: "1",
-//     name: "Cheese",
-//     image: "/chicken.png",
-//     price: 50,
-//     isAvailable: true,
-//   },
-//   {
-//     id: "2",
-//     name: "Jelapenjo",
-//     image: "/Jelapeno.png",
-//     price: 50,
-//     isAvailable: true,
-//   },
-//   {
-//     id: "3",
-//     name: "Cheese",
-//     image: "/cheese.png",
-//     price: 50,
-//     isAvailable: true,
-//   },
-// ];
+import { SkeletonCard } from "@/components/skeleton-card";
 
 const ToppingList = () => {
   const [toppings, setToppings] = useState<Topping[]>();
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,6 +16,7 @@ const ToppingList = () => {
       );
       const toppings = await toppingResponse.json();
       setToppings(toppings?.data);
+      setLoading(false);
     };
 
     fetchData();
@@ -48,15 +27,25 @@ const ToppingList = () => {
       (element: Topping) => element._id === topping._id
     );
 
-    if (isAlreadyExists) {
-      setSelectedToppings((prev) =>
-        prev.filter((element: Topping) => element._id !== topping._id)
-      );
-      return;
-    }
-
-    setSelectedToppings((prev) => [...prev, topping]);
+    startTransition(() => {
+      if (isAlreadyExists) {
+        setSelectedToppings((prev) =>
+          prev.filter((element: Topping) => element._id !== topping._id)
+        );
+        return;
+      }
+      setSelectedToppings((prev) => [...prev, topping]);
+    });
   };
+
+  if (loading) {
+    return (
+      <div className="mt-5">
+        <SkeletonCard />
+      </div>
+    );
+  }
+
   return (
     <section className="mt-6">
       <h3>Extra toppings</h3>
