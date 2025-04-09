@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React, { useEffect, useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { Product } from "@/lib/types";
+import { Product, Topping } from "@/lib/types";
 
 type ChosenConfig = {
   [key: string]: string;
@@ -21,6 +21,23 @@ const ProductModal = ({
   categoryName: string;
 }) => {
   const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+  const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+  const handleCheckBoxCheck = (topping: Topping) => {
+    const isAlreadyExists = selectedToppings.some(
+      (element: Topping) => element._id === topping._id
+    );
+
+    startTransition(() => {
+      if (isAlreadyExists) {
+        setSelectedToppings((prev) =>
+          prev.filter((element: Topping) => element._id !== topping._id)
+        );
+        return;
+      }
+      setSelectedToppings((prev) => [...prev, topping]);
+    });
+  };
 
   const handleAddToCart = () => {
     console.log("adding to cart...");
@@ -92,7 +109,12 @@ const ProductModal = ({
                 </div>
               );
             })}
-            {categoryName.toLowerCase() === "pizza" && <ToppingList />}
+            {categoryName.toLowerCase() === "pizza" && (
+              <ToppingList
+                selectedToppings={selectedToppings}
+                handleCheckBoxCheck={handleCheckBoxCheck}
+              />
+            )}
             <div className="flex items-center justify-between mt-10">
               <span className="font-bold">&#8377; {100}</span>
               <Button onClick={handleAddToCart}>

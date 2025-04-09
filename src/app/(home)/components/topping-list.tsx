@@ -1,12 +1,18 @@
 "use client";
-import React, { startTransition, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToppingCard from "./topping-card";
 import { Topping } from "@/lib/types";
 import { SkeletonCard } from "@/components/skeleton-card";
 
-const ToppingList = () => {
+const ToppingList = ({
+  selectedToppings,
+  handleCheckBoxCheck,
+}: {
+  selectedToppings: Topping[];
+  handleCheckBoxCheck: (topping: Topping) => void;
+}) => {
   const [toppings, setToppings] = useState<Topping[]>();
-  const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,22 +27,6 @@ const ToppingList = () => {
 
     fetchData();
   }, []);
-
-  const handleCheckBoxCheck = (topping: Topping) => {
-    const isAlreadyExists = selectedToppings.some(
-      (element: Topping) => element._id === topping._id
-    );
-
-    startTransition(() => {
-      if (isAlreadyExists) {
-        setSelectedToppings((prev) =>
-          prev.filter((element: Topping) => element._id !== topping._id)
-        );
-        return;
-      }
-      setSelectedToppings((prev) => [...prev, topping]);
-    });
-  };
 
   if (loading) {
     return (
