@@ -20,7 +20,9 @@ const CartCounter = () => {
       <span className="absolute -top-4 -right-5 h-6 w-6 flex items-center justify-center rounded-full bg-primary font-bold text-white">
         {value}
       </span>
-      <button onClick={handleIncrement}>Increment</button>
+      <button style={{ display: "none" }} onClick={handleIncrement}>
+        Increment
+      </button>
     </div>
   );
 };

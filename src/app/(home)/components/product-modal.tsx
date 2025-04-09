@@ -3,11 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Product } from "@/lib/types";
+
+type ChosenConfig = {
+  [key: string]: string;
+};
 
 const ProductModal = ({
   product,
@@ -16,9 +20,19 @@ const ProductModal = ({
   product: Product;
   categoryName: string;
 }) => {
+  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+
   const handleAddToCart = () => {
     console.log("adding to cart...");
   };
+  const handleRadioChange = (key: string, data: string) => {
+    setChosenConfig((prev) => {
+      return { ...prev, [key]: data };
+    });
+  };
+  useEffect(() => {
+    console.log("chosen configuration:", chosenConfig);
+  }, [chosenConfig]);
 
   return (
     <Dialog>
@@ -48,6 +62,10 @@ const ProductModal = ({
                   <RadioGroup
                     defaultValue={value.availableOptions[0]}
                     className="grid grid-cols-3 gap-4 mt-2"
+                    onValueChange={(data) => {
+                      handleRadioChange(key, data);
+                      // console.log("Data -> ", data);
+                    }}
                   >
                     {Object.entries(value.availableOptions).map(
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
