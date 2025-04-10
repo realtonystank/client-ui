@@ -94,16 +94,17 @@ const ProductModal = ({
                 <div key={key}>
                   <h4 className="mt-6 ">Choose the {key}</h4>
                   <RadioGroup
-                    defaultValue={value.availableOptions[0]}
+                    defaultValue={Object.entries(value.availableOptions)[0][0]}
                     className="grid grid-cols-3 gap-4 mt-2"
                     onValueChange={(data) => {
                       handleRadioChange(key, data);
-                      // console.log("Data -> ", data);
                     }}
                   >
                     {Object.entries(value.availableOptions).map(
                       // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       ([option, _price]) => {
+                        console.log("option -> ", option);
+                        console.log("_price -> ", _price);
                         return (
                           <div key={option}>
                             <RadioGroupItem
