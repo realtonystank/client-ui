@@ -2,14 +2,10 @@
 import Link from "next/link";
 import React from "react";
 import { ShoppingBasket } from "lucide-react";
-// import { useAppDispatch} from "@/lib/store/hooks";
+import { useAppSelector } from "@/lib/store/hooks";
 
 const CartCounter = () => {
-  // const value = useAppSelector((state) => state.cart.value);
-  // const dispatch = useAppDispatch();
-  const handleIncrement = () => {
-    // dispatch(increment());
-  };
+  const cart = useAppSelector((state) => state.cart.cartItems);
 
   return (
     <div className="relative">
@@ -17,11 +13,8 @@ const CartCounter = () => {
         <ShoppingBasket className="hover:text-primary" />
       </Link>
       <span className="absolute -top-4 -right-5 h-6 w-6 flex items-center justify-center rounded-full bg-primary font-bold text-white">
-        1
+        {cart.length}
       </span>
-      <button style={{ display: "none" }} onClick={handleIncrement}>
-        Increment
-      </button>
     </div>
   );
 };
