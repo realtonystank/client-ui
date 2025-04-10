@@ -12,6 +12,14 @@ export interface PriceConfiguration {
     availableOptions: string[];
   };
 }
+export interface ProductPriceConfiguration {
+  [key: string]: {
+    priceType: "base" | "additional";
+    availableOptions: {
+      [key: string]: number;
+    };
+  };
+}
 
 export interface Attribute {
   name: string;
@@ -31,7 +39,7 @@ export interface Product {
   _id: string;
   name: string;
   description: string;
-  priceConfiguration: PriceConfiguration;
+  priceConfiguration: ProductPriceConfiguration;
   attributes: Attribute[];
   tenantId: string;
   categoryId: string;
