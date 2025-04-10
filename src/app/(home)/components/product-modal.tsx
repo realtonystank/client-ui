@@ -8,6 +8,8 @@ import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Product, Topping } from "@/lib/types";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { addToCart } from "@/lib/store/features/cart/cartSlice";
 
 type ChosenConfig = {
   [key: string]: string;
@@ -20,6 +22,7 @@ const ProductModal = ({
   product: Product;
   categoryName: string;
 }) => {
+  const dispatch = useAppDispatch();
   const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
@@ -39,8 +42,16 @@ const ProductModal = ({
     });
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (product: Product) => {
     console.log("adding to cart...");
+    const itemToAdd = {
+      product,
+      chosenConfiguration: {
+        priceConfiguration: chosenConfig!,
+        selectedToppings: selectedToppings,
+      },
+    };
+    dispatch(addToCart(itemToAdd));
   };
   const handleRadioChange = (key: string, data: string) => {
     setChosenConfig((prev) => {
@@ -117,7 +128,7 @@ const ProductModal = ({
             )}
             <div className="flex items-center justify-between mt-10">
               <span className="font-bold">&#8377; {100}</span>
-              <Button onClick={handleAddToCart}>
+              <Button onClick={() => handleAddToCart(product)}>
                 <ShoppingCart size={20} />
                 <span className="ml-2">Add to cart</span>
               </Button>
