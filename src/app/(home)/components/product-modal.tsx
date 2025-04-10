@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React, { startTransition, useEffect, useState } from "react";
+import React, { startTransition, useState } from "react";
 import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
@@ -23,7 +23,16 @@ const ProductModal = ({
   categoryName: string;
 }) => {
   const dispatch = useAppDispatch();
-  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>();
+  const defaultConfiguration = Object.entries(product.priceConfiguration)
+    .map(([key, value]) => {
+      return { [key]: Object.entries(value.availableOptions)[0][0] };
+    })
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+  console.log("defaultConfig ->", defaultConfiguration);
+
+  const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(
+    defaultConfiguration as unknown as ChosenConfig
+  );
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
   const handleCheckBoxCheck = (topping: Topping) => {
@@ -58,9 +67,6 @@ const ProductModal = ({
       return { ...prev, [key]: data };
     });
   };
-  useEffect(() => {
-    console.log("chosen configuration:", chosenConfig);
-  }, [chosenConfig]);
 
   return (
     <Dialog>
