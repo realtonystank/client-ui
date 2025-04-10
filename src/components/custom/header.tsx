@@ -13,6 +13,7 @@ import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
 import { Restaurant } from "@/lib/types";
 import CartCounter from "./cart-counter";
+
 const Header = async () => {
   const tenantResponse = await fetch(
     `${process.env.BACKEND_URL}/api/auth/tenants?perPage=10000`,
