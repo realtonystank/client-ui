@@ -56,5 +56,5 @@ export type Topping = {
 };
 
 export type searchType = {
-  id: string;
+  restaurantId: string;
 };

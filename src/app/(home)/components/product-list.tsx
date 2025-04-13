@@ -8,7 +8,7 @@ const ProductList = async ({
 }: {
   searchParams: Promise<searchType>;
 }) => {
-  const { id } = await searchParams;
+  const { restaurantId } = await searchParams;
 
   const categoryPromise = fetch(
     `${process.env.BACKEND_URL}/api/catalog/categories?perPage=100`,
@@ -19,7 +19,7 @@ const ProductList = async ({
     }
   );
   const productsPromise = fetch(
-    `${process.env.BACKEND_URL}/api/catalog/products?perPage=10&tenantId=${id}`
+    `${process.env.BACKEND_URL}/api/catalog/products?perPage=10&tenantId=${restaurantId}`
   );
 
   const [categoryResponse, productsResponse] = await Promise.all([
