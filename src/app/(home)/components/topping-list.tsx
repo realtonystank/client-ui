@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import ToppingCard from "./topping-card";
 import { Topping } from "@/lib/types";
 import { SkeletonCard } from "@/components/skeleton-card";
+import { useSearchParams } from "next/navigation";
 
 const ToppingList = ({
   selectedToppings,
@@ -11,6 +12,7 @@ const ToppingList = ({
   selectedToppings: Topping[];
   handleCheckBoxCheck: (topping: Topping) => void;
 }) => {
+  const searchParams = useSearchParams();
   const [toppings, setToppings] = useState<Topping[]>();
 
   const [loading, setLoading] = useState(true);
@@ -18,7 +20,9 @@ const ToppingList = ({
   useEffect(() => {
     const fetchData = async () => {
       const toppingResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings`
+        `${
+          process.env.NEXT_PUBLIC_BACKEND_URL
+        }/api/catalog/toppings?tenantId=${searchParams.get("restaurantId")}`
       );
       const toppings = await toppingResponse.json();
       setToppings(toppings?.data);
