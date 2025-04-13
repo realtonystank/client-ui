@@ -23,6 +23,8 @@ const ProductModal = ({
   product: Product;
   categoryName: string;
 }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   const cartItems = useAppSelector((state) => state.cart.cartItems);
   const dispatch = useAppDispatch();
   const defaultConfiguration = Object.entries(product.priceConfiguration)
@@ -105,6 +107,7 @@ const ProductModal = ({
       qty: 1,
     };
     dispatch(addToCart(itemToAdd));
+    setDialogOpen(false);
   };
   const handleRadioChange = (key: string, data: string) => {
     setChosenConfig((prev) => {
@@ -113,7 +116,7 @@ const ProductModal = ({
   };
 
   return (
-    <Dialog>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogTrigger asChild>
         <Button className="bg-orange-200 hover:bg-orange:300 text-orange-500 hover:text-white px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150 cursor-pointer">
           Choose
