@@ -8,8 +8,9 @@ import ToppingList from "./topping-list";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { Product, Topping } from "@/lib/types";
-import { useAppDispatch } from "@/lib/store/hooks";
-import { addToCart } from "@/lib/store/features/cart/cartSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
+import { addToCart, CartItem } from "@/lib/store/features/cart/cartSlice";
+import { hashTheItem } from "@/lib/utils";
 
 type ChosenConfig = {
   [key: string]: string;
@@ -22,6 +23,7 @@ const ProductModal = ({
   product: Product;
   categoryName: string;
 }) => {
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
   const dispatch = useAppDispatch();
   const defaultConfiguration = Object.entries(product.priceConfiguration)
     .map(([key, value]) => {
@@ -36,7 +38,7 @@ const ProductModal = ({
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
   const totalPrice = useMemo(() => {
-    console.log("selected toppings -> ", selectedToppings);
+    //console.log("selected toppings -> ", selectedToppings);
     const toppingsTotal = selectedToppings.reduce(
       (acc, curr) => acc + curr.price,
       0
@@ -53,6 +55,25 @@ const ProductModal = ({
 
     return toppingsTotal + configPricing;
   }, [chosenConfig, selectedToppings, product]);
+
+  const alreadyHasInCart = useMemo(() => {
+    const currentConfig: CartItem = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      priceConfiguration: product.priceConfiguration,
+      chosenConfiguration: {
+        priceConfiguration: { ...chosenConfig },
+        selectedToppings: selectedToppings,
+      },
+      qty: 1,
+    };
+
+    const hash = hashTheItem(currentConfig);
+    //console.log("new hash -> ", hash);
+
+    return cartItems.some((item) => item.hash === hash);
+  }, [product, chosenConfig, selectedToppings, cartItems]);
 
   const handleCheckBoxCheck = (topping: Topping) => {
     const isAlreadyExists = selectedToppings.some(
@@ -72,12 +93,16 @@ const ProductModal = ({
 
   const handleAddToCart = (product: Product) => {
     console.log("adding to cart...");
-    const itemToAdd = {
-      product,
+    const itemToAdd: CartItem = {
+      _id: product._id,
+      name: product.name,
+      image: product.image,
+      priceConfiguration: product.priceConfiguration,
       chosenConfiguration: {
         priceConfiguration: chosenConfig!,
         selectedToppings: selectedToppings,
       },
+      qty: 1,
     };
     dispatch(addToCart(itemToAdd));
   };
@@ -152,11 +177,18 @@ const ProductModal = ({
                 handleCheckBoxCheck={handleCheckBoxCheck}
               />
             )}
+
             <div className="flex items-center justify-between mt-10">
               <span className="font-bold">&#8377; {totalPrice}</span>
-              <Button onClick={() => handleAddToCart(product)}>
+              <Button
+                onClick={() => handleAddToCart(product)}
+                disabled={alreadyHasInCart}
+                className={alreadyHasInCart ? "bg-gray-700" : "bg-primary"}
+              >
                 <ShoppingCart size={20} />
-                <span className="ml-2">Add to cart</span>
+                <span className="ml-2">
+                  {alreadyHasInCart ? "Already in cart" : "Add to cart"}
+                </span>
               </Button>
             </div>
           </div>
