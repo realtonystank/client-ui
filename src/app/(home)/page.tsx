@@ -3,8 +3,13 @@ import Image from "next/image";
 import ProductList from "./components/product-list";
 import { Suspense } from "react";
 import ProductSkeleton from "./components/product-skeleton";
+import { searchType } from "@/lib/types";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<searchType>;
+}) {
   return (
     <>
       <section className="bg-white flex justify-center py-10">
@@ -32,7 +37,7 @@ export default async function Home() {
         </div>
       </section>
       <Suspense fallback={<ProductSkeleton />}>
-        <ProductList />
+        <ProductList searchParams={searchParams} />
       </Suspense>
     </>
   );

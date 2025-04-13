@@ -1,9 +1,15 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Category, Product } from "@/lib/types";
+import { Category, Product, searchType } from "@/lib/types";
 import React from "react";
 import ProductCard from "./product-card";
 
-const ProductList = async () => {
+const ProductList = async ({
+  searchParams,
+}: {
+  searchParams: Promise<searchType>;
+}) => {
+  const { id } = await searchParams;
+
   const categoryPromise = fetch(
     `${process.env.BACKEND_URL}/api/catalog/categories?perPage=100`,
     {
@@ -13,7 +19,7 @@ const ProductList = async () => {
     }
   );
   const productsPromise = fetch(
-    `${process.env.BACKEND_URL}/api/catalog/products?perPage=10`
+    `${process.env.BACKEND_URL}/api/catalog/products?perPage=10&tenantId=${id}`
   );
 
   const [categoryResponse, productsResponse] = await Promise.all([
@@ -29,9 +35,9 @@ const ProductList = async () => {
     throw new Error("Failed to fetch products");
   }
   const products = await productsResponse.json();
-  console.log(products);
+  // console.log(products);
 
-  console.log(categories);
+  // console.log(categories);
 
   return (
     <section>

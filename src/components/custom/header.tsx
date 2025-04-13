@@ -1,18 +1,10 @@
 import Image from "next/image";
 import logo from "@/../public/logo.svg";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import Link from "next/link";
 import { Phone } from "lucide-react";
 import { Button } from "../ui/button";
-import { Restaurant } from "@/lib/types";
 import CartCounter from "./cart-counter";
+import TenantSelect from "./tenant-select";
 
 const Header = async () => {
   const tenantResponse = await fetch(
@@ -33,26 +25,7 @@ const Header = async () => {
       <nav className="container p-5 flex justify-between items-center">
         <div className="px-35 flex items-center justify-start space-x-4 ">
           <Image src={logo} alt={"logo"} />
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select restaurant" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {restaurants?.data.map((restaurant: Restaurant) => {
-                  return (
-                    <SelectItem
-                      key={restaurant.id}
-                      value={restaurant.id}
-                      className={"w-full"}
-                    >
-                      {restaurant.name}
-                    </SelectItem>
-                  );
-                })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <TenantSelect restaurants={restaurants} />
         </div>
         <div className="flex items-center space-x-4">
           <ul className="flex items-center font-medium space-x-4">

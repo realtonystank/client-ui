@@ -54,3 +54,7 @@ export type Topping = {
   price: number;
   isAvailable: boolean;
 };
+
+export type searchType = {
+  id: string;
+};
