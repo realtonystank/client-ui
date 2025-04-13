@@ -10,6 +10,7 @@ import React from "react";
 
 import { Product } from "@/lib/types";
 import ProductModal from "./product-modal";
+import { getFromPrice } from "@/lib/utils";
 
 // export type Product = {
 //   id: string;
@@ -45,7 +46,9 @@ const ProductCard = ({ product, categoryName }: PropTypes) => {
       <CardFooter className="flex justify-between items-center pt-4 mt-auto border-t">
         <p className="text-sm sm:text-base">
           <span className="text-gray-500">From&nbsp;&nbsp;&nbsp;</span>
-          <span className="font-bold text-lg sm:text-xl">₹{100}</span>
+          <span className="font-bold text-lg sm:text-xl">
+            ₹{getFromPrice(product)}
+          </span>
         </p>
         <ProductModal product={product} categoryName={categoryName} />
       </CardFooter>
