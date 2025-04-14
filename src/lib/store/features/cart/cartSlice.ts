@@ -65,10 +65,40 @@ export const cartSlice = createSlice({
         );
       }
     },
+    removeFromCart: (state, action: PayloadAction<{ hash: string }>) => {
+      if (typeof window != "undefined" && window.localStorage) {
+        const cartItemsFromLocalStorage = JSON.parse(
+          window.localStorage.getItem("cartItems") || "[]"
+        );
+        if (cartItemsFromLocalStorage.length > 0) {
+          const index = cartItemsFromLocalStorage.findIndex(
+            (item: CartItem) => item.hash === action.payload.hash
+          );
+
+          if (index === -1) {
+            console.error("Local storage and cart not in sync");
+          } else {
+            cartItemsFromLocalStorage.splice(index, 1);
+            window.localStorage.setItem(
+              "cartItems",
+              JSON.stringify(cartItemsFromLocalStorage)
+            );
+          }
+        }
+        console.error("Local storage and cart not in sync.");
+      }
+
+      return {
+        cartItems: state.cartItems.filter(
+          (item) => item.hash !== action.payload.hash
+        ),
+      };
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addToCart, setInitialCartItems, changeQty } = cartSlice.actions;
+export const { addToCart, setInitialCartItems, changeQty, removeFromCart } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;

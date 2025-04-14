@@ -2,6 +2,7 @@ import React from "react";
 import {
   changeQty,
   CartItem as Item,
+  removeFromCart,
 } from "@/lib/store/features/cart/cartSlice";
 import Image from "next/image";
 import { X } from "lucide-react";
@@ -40,7 +41,12 @@ const CartItem = ({ item }: { item: Item }) => {
           </div>
           <div className="flex">
             <div className="font-bold w-12">&#8377;300</div>
-            <button className="ml-4">
+            <button
+              className="ml-4 hover:cursor-pointer"
+              onClick={() => {
+                dispatch(removeFromCart({ hash: item.hash! }));
+              }}
+            >
               <X />
             </button>
           </div>
