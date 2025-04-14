@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -19,16 +19,27 @@ const TenantSelect = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const handleValueChange = (value: string) => {
-    console.log(value);
-    router.push(`/?restaurantId=${value}`);
+  const [value, setValue] = useState("");
+
+  const handleValueChange = (newValue: string) => {
+    console.log(newValue);
+    router.push(`?restaurantId=${newValue}`);
+    setValue(newValue);
   };
 
+  useEffect(() => {
+    const restId = searchParams.get("restaurantId");
+    console.log("restId -> ", restId);
+    if (restId) {
+      router.push(`?restaurantId=${restId}`);
+      setValue(restId);
+    } else {
+      setValue("");
+    }
+  }, [router, searchParams]);
+
   return (
-    <Select
-      onValueChange={handleValueChange}
-      defaultValue={searchParams.get("restaurantId") || ""}
-    >
+    <Select onValueChange={handleValueChange} value={value}>
       <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select restaurant" />
       </SelectTrigger>

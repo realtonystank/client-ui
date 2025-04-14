@@ -84,8 +84,9 @@ export const cartSlice = createSlice({
               JSON.stringify(cartItemsFromLocalStorage)
             );
           }
+        } else {
+          console.error("Local storage and cart not in sync.");
         }
-        console.error("Local storage and cart not in sync.");
       }
 
       return {

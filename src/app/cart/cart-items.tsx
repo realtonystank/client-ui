@@ -10,7 +10,7 @@ import CartItem from "./cart-item";
 const CartItems = () => {
   const searchParams = useSearchParams();
   const cart = useAppSelector((state) => state.cart.cartItems);
-
+  const restId = searchParams.get("restaurantId");
   if (!cart.length) {
     return (
       <div className="flex items-center gap-2">
@@ -19,7 +19,7 @@ const CartItems = () => {
           Your cart is empty!{" "}
           <Link
             className="text-orange-500"
-            href={`/?retaurantId=${searchParams.get("restaurantId")}`}
+            href={!!restId ? `/?restaurantId=${restId}` : `/`}
           >
             Continue shopping?
           </Link>
