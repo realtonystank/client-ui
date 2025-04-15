@@ -42,7 +42,7 @@ export default async function login(
       const error = await response.json();
       return {
         type: "error",
-        message: error.errors[0].message,
+        message: error.errors[0].msg,
       };
     }
 
@@ -94,7 +94,7 @@ export default async function login(
     console.error(err);
     return {
       type: "error",
-      message: err instanceof Error ? err.message : "Login failure",
+      message: err instanceof Error ? err.message : "Login failure!",
     };
   }
 }
