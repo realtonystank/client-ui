@@ -64,9 +64,6 @@ export default async function login(
       refreshToken
     ) as unknown as RefreshTokenType;
 
-    console.log(parsedAccessToken);
-    console.log(parsedRefreshToken);
-
     (await cookies()).set({
       name: "accessToken",
       value: parsedAccessToken.accessToken,

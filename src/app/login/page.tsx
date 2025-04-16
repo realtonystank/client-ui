@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import Image from "next/image";
-import React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import React, { useActionState } from "react";
+import { useFormStatus } from "react-dom";
 import login from "@/lib/actions/login";
 import { LoaderCircle } from "lucide-react";
 
@@ -28,7 +28,7 @@ const SubmitButton = () => {
 };
 
 const Login = () => {
-  const [state, formAction] = useFormState(login, initialState);
+  const [state, formAction] = useActionState(login, initialState);
 
   if (state.type === "success") {
     window.location.href = "/";

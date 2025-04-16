@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import CartCounter from "./cart-counter";
 import TenantSelect from "./tenant-select";
 import { getSession } from "@/lib/session";
+import LogoutButton from "./logout";
 
 const Header = async () => {
   const session = await getSession();
@@ -49,7 +50,13 @@ const Header = async () => {
             <Phone />
             <span>+91 9770653716</span>
           </div>
-          <Button size={"sm"}>{session ? "Logout" : "Login"}</Button>
+          {session ? (
+            <LogoutButton />
+          ) : (
+            <Button size={"sm"} asChild>
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
         </div>
       </nav>
     </header>
