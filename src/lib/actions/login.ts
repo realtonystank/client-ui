@@ -1,20 +1,9 @@
 "use server";
 import cookie from "cookie";
 import { cookies } from "next/headers";
+import { AccessTokenType, RefreshTokenType } from "../types";
 
-type AccessTokenType = {
-  accessToken: string;
-  expires: string;
-  httpOnly: boolean;
-  Path: string;
-  Domain: string;
-  SameSite: string;
-  "Max-age": string;
-};
 
-type RefreshTokenType = Omit<AccessTokenType, "accessToken"> & {
-  refreshToken: string;
-};
 
 export default async function login(
   prevState: { type: string; message: unknown },

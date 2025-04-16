@@ -58,3 +58,17 @@ export type Topping = {
 export type searchType = {
   restaurantId: string;
 };
+
+export type AccessTokenType = {
+  accessToken: string;
+  expires: string;
+  httpOnly: boolean;
+  Path: string;
+  Domain: string;
+  SameSite: string;
+  "Max-age": string;
+};
+
+export type RefreshTokenType = Omit<AccessTokenType, "accessToken"> & {
+  refreshToken: string;
+};
