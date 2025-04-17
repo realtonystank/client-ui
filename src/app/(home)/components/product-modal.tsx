@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart, CartItem } from "@/lib/store/features/cart/cartSlice";
 import { hashTheItem } from "@/lib/utils";
 import { toast } from "sonner";
+import { useTotal } from "@/lib/hooks/useTotal";
 
 const SuccessToast = () => {
   return (
@@ -50,24 +51,11 @@ const ProductModal = ({
   );
   const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
-  const totalPrice = useMemo(() => {
-    //console.log("selected toppings -> ", selectedToppings);
-    const toppingsTotal = selectedToppings.reduce(
-      (acc, curr) => acc + curr.price,
-      0
-    );
-
-    const configPricing = Object.entries(chosenConfig).reduce(
-      (acc, [key, value]) => {
-        const price = product.priceConfiguration[key].availableOptions[value];
-
-        return acc + price;
-      },
-      0
-    );
-
-    return toppingsTotal + configPricing;
-  }, [chosenConfig, selectedToppings, product]);
+  const totalPrice = useTotal({
+    ...product,
+    chosenConfiguration: { priceConfiguration: chosenConfig, selectedToppings },
+    qty: 1,
+  });
 
   const alreadyHasInCart = useMemo(() => {
     const currentConfig: CartItem = {
