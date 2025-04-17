@@ -8,8 +8,10 @@ import Image from "next/image";
 import { X } from "lucide-react";
 import QtyChanger from "./qty-changer";
 import { useAppDispatch } from "@/lib/store/hooks";
+import { useTotal } from "@/lib/hooks/useTotal";
 const CartItem = ({ item }: { item: Item }) => {
   const dispatch = useAppDispatch();
+  const total = useTotal(item);
   return (
     <>
       <div className="grid grid-cols-2">
@@ -40,7 +42,7 @@ const CartItem = ({ item }: { item: Item }) => {
             </QtyChanger>
           </div>
           <div className="flex">
-            <div className="font-bold w-12">&#8377;300</div>
+            <div className="font-bold w-12">&#8377;{total * item.qty}</div>
             <button
               className="ml-4 hover:cursor-pointer"
               onClick={() => {
