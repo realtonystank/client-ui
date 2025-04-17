@@ -4,12 +4,19 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useMemo } from "react";
 import CartItem from "./cart-item";
+import { getItemTotal } from "@/lib/utils";
 
 const CartItems = () => {
   const searchParams = useSearchParams();
   const cart = useAppSelector((state) => state.cart.cartItems);
+
+  const finalTotal = useMemo(() => {
+    return cart.reduce((acc, curr) => {
+      return acc + curr.qty * getItemTotal(curr);
+    }, 0);
+  }, [cart]);
   const restId = searchParams.get("restaurantId");
   if (!cart.length) {
     return (
@@ -34,7 +41,7 @@ const CartItems = () => {
         return <CartItem key={cartItem.hash!} item={cartItem} />;
       })}
       <div className="flex justify-between items-center mt-10">
-        <span className="font-bold">&#8377; {4000}</span>
+        <span className="font-bold">&#8377; {finalTotal}</span>
         <Button>
           Checkout
           <ArrowRight size={16} className="ml-2" />
