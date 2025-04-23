@@ -5,10 +5,17 @@ import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const Checkout = async () => {
+const Checkout = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ restaurantId: string }>;
+}) => {
   const session = await getSession();
+  const query = await searchParams;
+  const queryString = new URLSearchParams(query).toString();
+
   if (!session) {
-    redirect("/login");
+    redirect(`/login?${queryString}`);
   }
   return (
     <div className="flex container gap-6 mt-16 mx-auto">
