@@ -72,3 +72,15 @@ export type AccessTokenType = {
 export type RefreshTokenType = Omit<AccessTokenType, "accessToken"> & {
   refreshToken: string;
 };
+interface Address {
+  text: string;
+  isDefault: boolean;
+}
+
+export interface Customer {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  addresses: Address[];
+}
