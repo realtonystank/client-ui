@@ -8,6 +8,7 @@ import React, { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import login from "@/lib/actions/login";
 import { LoaderCircle } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 const initialState = { type: "", message: "" };
 
@@ -29,9 +30,17 @@ const SubmitButton = () => {
 
 const Login = () => {
   const [state, formAction] = useActionState(login, initialState);
+  const searchParams = useSearchParams();
 
   if (state.type === "success") {
-    window.location.href = "/";
+    const redirectTo = searchParams.get("returnTo");
+    const restaurantId = searchParams.get("restaurantId");
+    let otherWise = `/`;
+    if (restaurantId) {
+      otherWise = `/?restaurantId=${restaurantId}`;
+    }
+
+    window.location.href = redirectTo ? redirectTo : otherWise;
     return;
   }
   return (

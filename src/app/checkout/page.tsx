@@ -12,10 +12,12 @@ const Checkout = async ({
 }) => {
   const session = await getSession();
   const query = await searchParams;
-  const queryString = new URLSearchParams(query).toString();
+  const sParams = new URLSearchParams(query);
+  const existingQueryString = sParams.toString();
+  sParams.append("returnTo", `/checkout?${existingQueryString}`);
 
   if (!session) {
-    redirect(`/login?${queryString}`);
+    redirect(`/login?${sParams}`);
   }
   return (
     <div className="flex container gap-6 mt-16 mx-auto">

@@ -22,16 +22,17 @@ const TenantSelect = ({
   const [value, setValue] = useState("");
 
   const handleValueChange = (newValue: string) => {
-    console.log(newValue);
-    router.push(`?restaurantId=${newValue}`);
+    const queryParams = new URLSearchParams(searchParams);
+    queryParams.set("restaurantId", newValue);
+    router.push(`?${queryParams.toString()}`);
     setValue(newValue);
   };
 
   useEffect(() => {
     const restId = searchParams.get("restaurantId");
-    console.log("restId -> ", restId);
+    const queryParams = new URLSearchParams(searchParams).toString();
     if (restId) {
-      router.push(`?restaurantId=${restId}`);
+      router.push(`?${queryParams}`);
       setValue(restId);
     } else {
       setValue("");
