@@ -1,30 +1,22 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
+
 import { getCustomer } from "@/lib/http/api";
 import { useQuery } from "@tanstack/react-query";
-import { Loader, Plus } from "lucide-react";
+import { Loader } from "lucide-react";
 import React from "react";
+import AddAddress from "./addAddress";
 
 interface Address {
   text: string;
   isDefault: boolean;
 }
 
-interface Customer {
+export interface Customer {
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -85,31 +77,7 @@ const CustomerForm = () => {
               <div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="name">Address</Label>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button size={"sm"} variant={"link"}>
-                        <Plus size={"16"} />
-                        <span className="ml-2">Add New Address</span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle>Add Address</DialogTitle>
-                        <DialogDescription>
-                          We can sve your address for next time order.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div>
-                          <Label htmlFor="address">Address</Label>
-                          <Textarea className="mt-2" />
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit">Save changes</Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                  <AddAddress customerId={customer?._id} />
                 </div>
                 <RadioGroup
                   defaultValue="option-one"
