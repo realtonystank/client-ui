@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -54,8 +54,11 @@ const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
     },
   });
 
-  const handleAddAddress = (data: z.infer<typeof formSchema>) => {
-    mutate(data);
+  const handleAddAddress = (e: FormEvent<HTMLFormElement>) => {
+    e.stopPropagation();
+    return addressForm.handleSubmit((data: z.infer<typeof formSchema>) => {
+      mutate(data);
+    })(e);
   };
 
   return (
@@ -68,7 +71,7 @@ const AddAddress = ({ customerId }: { customerId: string | undefined }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...addressForm}>
-          <form onSubmit={addressForm.handleSubmit(handleAddAddress)}>
+          <form onSubmit={handleAddAddress}>
             <DialogHeader>
               <DialogTitle>Add Address</DialogTitle>
               <DialogDescription>
