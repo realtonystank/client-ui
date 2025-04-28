@@ -84,3 +84,33 @@ export interface Customer {
   email: string;
   addresses: Address[];
 }
+
+export type CouponTypeData = {
+  code: string;
+  tenantId: string;
+};
+
+export type CouponResponseType = {
+  valid: boolean;
+  discount: string;
+};
+
+type CustomError = {
+  ref: string;
+  type: string;
+  msg: string;
+};
+
+type ErrorResponse = {
+  data: {
+    errors: CustomError[];
+  };
+};
+
+export type ServerErrorType = {
+  code: string;
+  message: string;
+  name: string;
+  stack?: string;
+  response: ErrorResponse;
+};
