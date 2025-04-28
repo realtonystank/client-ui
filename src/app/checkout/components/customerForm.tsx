@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
+import OrderSummary from "./orderSummary";
 
 const formSchema = z.object({
   address: z.string({ required_error: "Please select an address" }),
@@ -206,6 +207,7 @@ const CustomerForm = () => {
               </div>
             </CardContent>
           </Card>
+          <OrderSummary />
         </div>
       </form>
     </Form>
