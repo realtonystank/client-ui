@@ -1,3 +1,5 @@
+import { CartItem } from "../store/features/cart/cartSlice";
+
 export type Restaurant = {
   id: string;
   name: string;
@@ -113,4 +115,14 @@ export type ServerErrorType = {
   name: string;
   stack?: string;
   response: ErrorResponse;
+};
+
+export type OrderData = {
+  cart: CartItem[];
+  couponCode: string;
+  tenantId: string;
+  customerId: string;
+  address: string;
+  comment: string;
+  paymentMode: string;
 };

@@ -1,7 +1,8 @@
 "use client";
 import React, { useRef } from "react";
 import { z } from "zod";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { v4 as uuidv4 } from "uuid";
 import { Coins, CreditCard, Loader } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,10 +10,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-import { getCustomer } from "@/lib/http/api";
+import { createOrder, getCustomer } from "@/lib/http/api";
 
 import AddAddress from "./addAddress";
-import { Customer } from "@/lib/types";
+import { Customer, OrderData } from "@/lib/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -45,6 +46,21 @@ const CustomerForm = () => {
     },
   });
 
+  const idempotencyKeyRef = useRef("");
+
+  const { mutate } = useMutation({
+    mutationKey: ["order"],
+    mutationFn: async (data: OrderData) => {
+      const idempotencyKey = idempotencyKeyRef.current
+        ? idempotencyKeyRef.current
+        : (idempotencyKeyRef.current = uuidv4() + customer?._id);
+      const response = await createOrder(data, idempotencyKey);
+      console.log(response);
+      return response.data;
+    },
+    retry: 3,
+  });
+
   const customerForm = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -58,15 +74,17 @@ const CustomerForm = () => {
       alert("Restaurant Id is required");
       return;
     }
-    const orderData = {
+    const orderData: OrderData = {
       cart: cart.cartItems,
       couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
       tenantId,
-      customerId: customer?._id,
+      customerId: customer ? customer?._id : "",
       comment: data.comment,
       address: data.address,
       paymentMode: data.paymentMode,
     };
+
+    mutate(orderData);
 
     console.log("orderData - ", orderData);
   };
