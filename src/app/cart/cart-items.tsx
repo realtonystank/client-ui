@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/lib/store/hooks";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, redirect } from "next/navigation";
 import React, { useMemo } from "react";
 import CartItem from "./cart-item";
 import { getItemTotal } from "@/lib/utils";
@@ -42,7 +42,11 @@ const CartItems = () => {
       })}
       <div className="flex justify-between items-center mt-10">
         <span className="font-bold">&#8377; {finalTotal}</span>
-        <Button>
+        <Button
+          onClick={() => {
+            redirect(`/checkout?${searchParams}`);
+          }}
+        >
           Checkout
           <ArrowRight size={16} className="ml-2" />
         </Button>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { z } from "zod";
 import { useQuery } from "@tanstack/react-query";
 import { Coins, CreditCard, Loader } from "lucide-react";
@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import OrderSummary from "./orderSummary";
+import { useAppSelector } from "@/lib/store/hooks";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   address: z.string({ required_error: "Please select an address" }),
@@ -34,6 +36,7 @@ const formSchema = z.object({
 });
 
 const CustomerForm = () => {
+  const searchParams = useSearchParams();
   const { data: customer, isPending } = useQuery<Customer>({
     queryKey: ["customer"],
     queryFn: async () => {
@@ -46,8 +49,26 @@ const CustomerForm = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const cart = useAppSelector((state) => state.cart);
+  const chosenCouponCode = useRef("");
+
   const handlePlaceOrder = (data: z.infer<typeof formSchema>) => {
-    console.log("data from CustomerForm component -> ", data);
+    const tenantId = searchParams.get("restaurantId");
+    if (!tenantId) {
+      alert("Restaurant Id is required");
+      return;
+    }
+    const orderData = {
+      cart: cart.cartItems,
+      couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
+      tenantId,
+      customerId: customer?._id,
+      comment: data.comment,
+      address: data.address,
+      paymentMode: data.paymentMode,
+    };
+
+    console.log("orderData - ", orderData);
   };
 
   return (
@@ -207,7 +228,11 @@ const CustomerForm = () => {
               </div>
             </CardContent>
           </Card>
-          <OrderSummary />
+          <OrderSummary
+            handleCouponCodeChange={(code) => {
+              chosenCouponCode.current = code;
+            }}
+          />
         </div>
       </form>
     </Form>

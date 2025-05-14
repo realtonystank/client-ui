@@ -17,7 +17,11 @@ import React, { useMemo, useRef, useState } from "react";
 const TAXES_PERCENTAGE = 18;
 const DELIVERY_CHARGES = 100;
 
-const OrderSummary = () => {
+const OrderSummary = ({
+  handleCouponCodeChange,
+}: {
+  handleCouponCodeChange: (code: string) => void;
+}) => {
   const searchParams = useSearchParams();
   const cart = useAppSelector((state) => state.cart.cartItems);
   const [discountError, setDiscountError] = useState("");
@@ -70,10 +74,14 @@ const OrderSummary = () => {
         console.log(_data);
         setDiscountError("");
         setDiscountPercentage(Number(_data.discount));
+        handleCouponCodeChange(
+          couponCodeRef.current ? couponCodeRef.current.value : ""
+        );
         return;
       } else {
         setDiscountError("Coupon expired");
         setDiscountPercentage(0);
+        handleCouponCodeChange("");
       }
     },
     onError: (error: ServerErrorType) => {
