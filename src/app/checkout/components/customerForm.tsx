@@ -1,4 +1,5 @@
 "use client";
+import { load } from "@cashfreepayments/cashfree-js";
 import React, { useRef } from "react";
 import { z } from "zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -48,7 +49,7 @@ const CustomerForm = () => {
 
   const idempotencyKeyRef = useRef("");
 
-  const { mutate } = useMutation({
+  const { mutate, isPending: isPlaceOrderPending } = useMutation({
     mutationKey: ["order"],
     mutationFn: async (data: OrderData) => {
       const idempotencyKey = idempotencyKeyRef.current
@@ -57,6 +58,17 @@ const CustomerForm = () => {
       const response = await createOrder(data, idempotencyKey);
       console.log(response);
       return response.data;
+    },
+    onSuccess: async (data) => {
+      const cashfree = await load({ mode: "sandbox" });
+      console.log("data in after success - ", data);
+      if (cashfree && data.session) {
+        const checkoutOptions = {
+          paymentSessionId: data.session.id,
+          redirectTarget: "_self",
+        };
+        cashfree.checkout(checkoutOptions);
+      }
     },
     retry: 3,
   });
@@ -250,6 +262,7 @@ const CustomerForm = () => {
             handleCouponCodeChange={(code) => {
               chosenCouponCode.current = code;
             }}
+            isPlaceOrderPending={isPlaceOrderPending}
           />
         </div>
       </form>

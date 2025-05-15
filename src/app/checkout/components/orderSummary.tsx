@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,7 @@ import {
 } from "@/lib/types";
 import { getItemTotal } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
+import { LoaderCircle } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import React, { useMemo, useRef, useState } from "react";
 
@@ -19,14 +21,17 @@ const DELIVERY_CHARGES = 100;
 
 const OrderSummary = ({
   handleCouponCodeChange,
+  isPlaceOrderPending,
 }: {
   handleCouponCodeChange: (code: string) => void;
+  isPlaceOrderPending: boolean;
 }) => {
   const searchParams = useSearchParams();
   const cart = useAppSelector((state) => state.cart.cartItems);
   const [discountError, setDiscountError] = useState("");
   const [discountPercentage, setDiscountPercentage] = useState(0);
   const couponCodeRef = useRef<HTMLInputElement>(null);
+
 
   const subTotal = useMemo(() => {
     return cart.reduce((acc, curr) => {
@@ -96,6 +101,7 @@ const OrderSummary = ({
     mutate();
   };
 
+
   return (
     <Card className="w-2/5 border-none h-auto self-start">
       <CardHeader>
@@ -149,7 +155,16 @@ const OrderSummary = ({
           </div>
         </div>
         <div className="text-right mt-6">
-          <Button>Place order</Button>
+          <Button disabled={isPlaceOrderPending}>
+            {isPlaceOrderPending ? (
+              <span className="flex items-center gap-2">
+                <LoaderCircle className="animate-spin" />
+                <span>Please wait...</span>
+              </span>
+            ) : (
+              <span>Place order</span>
+            )}
+          </Button>
         </div>
       </CardContent>
     </Card>
