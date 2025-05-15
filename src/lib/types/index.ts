@@ -126,3 +126,11 @@ export type OrderData = {
   comment: string;
   paymentMode: string;
 };
+
+export interface PaymentSession {
+  id: string;
+  paymentStatus: "paid" | "unpaid";
+  metadata: {
+    orderId: string;
+  };
+}
