@@ -17,9 +17,9 @@ import React from "react";
 const Payment = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ order_id: string }>;
+  searchParams: Promise<{ order_id: string; restaurantId: string }>;
 }) => {
-  const { order_id } = await searchParams;
+  const { order_id, restaurantId } = await searchParams;
   console.log("order_id is -", order_id);
 
   const response = await fetch(
@@ -93,7 +93,7 @@ const Payment = async ({
       {isOrderSuccess ? (
         <Button asChild className="mt-6">
           <Link
-            href={`/order-status/${paymentSession.metadata.orderId}`}
+            href={`/order-status/${paymentSession.metadata.orderId}?restaurantId=${restaurantId}`}
             className="flex items-center gap-2"
           >
             <ArrowLeft size={20} className="text-white" />
@@ -102,7 +102,10 @@ const Payment = async ({
         </Button>
       ) : (
         <Button asChild className="mt-6">
-          <Link href={`/checkout`} className="flex items-center gap-2">
+          <Link
+            href={`/checkout?restaurantId=${restaurantId}`}
+            className="flex items-center gap-2"
+          >
             <ArrowLeft size={20} className="text-white" />
             <span>Go to checkout</span>
           </Link>
