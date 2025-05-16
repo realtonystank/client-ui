@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import CartCleaner from "../checkout/components/cartCleaner";
 
 const Payment = async ({
   searchParams,
@@ -32,86 +33,89 @@ const Payment = async ({
   const isOrderSuccess = paymentSession.paymentStatus === "paid";
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full mt-32">
-      {isOrderSuccess ? (
-        <CheckCircle2 size={80} className="text-green-500" />
-      ) : (
-        <CircleX size={80} className="text-red-500" />
-      )}
+    <>
+      {isOrderSuccess && <CartCleaner />}
+      <div className="flex flex-col items-center gap-4 w-full mt-32">
+        {isOrderSuccess ? (
+          <CheckCircle2 size={80} className="text-green-500" />
+        ) : (
+          <CircleX size={80} className="text-red-500" />
+        )}
 
-      <h1 className="text-2xl font-bold mt-2 text-center">
-        {isOrderSuccess ? (
-          <span>Order Placed Succesfully</span>
-        ) : (
-          <span>Order failed</span>
-        )}
-      </h1>
-      <p className="text-base font-semibold -mt-2">
-        {isOrderSuccess ? (
-          <span>Thank you for your order.</span>
-        ) : (
-          <span>Please try again.</span>
-        )}
-      </p>
-      <Card className="mt-6 min-w-110">
-        <CardHeader className="px-4 ">
-          <CardTitle className="flex items-center justify-between gap-12 ">
-            <div className="flex items-center gap-3">
-              <Store size={35} className="text-primary" />
-              <span className="text-base">Your order information.</span>
+        <h1 className="text-2xl font-bold mt-2 text-center">
+          {isOrderSuccess ? (
+            <span>Order Placed Succesfully</span>
+          ) : (
+            <span>Order failed</span>
+          )}
+        </h1>
+        <p className="text-base font-semibold -mt-2">
+          {isOrderSuccess ? (
+            <span>Thank you for your order.</span>
+          ) : (
+            <span>Please try again.</span>
+          )}
+        </p>
+        <Card className="mt-6 min-w-110">
+          <CardHeader className="px-4 ">
+            <CardTitle className="flex items-center justify-between gap-12 ">
+              <div className="flex items-center gap-3">
+                <Store size={35} className="text-primary" />
+                <span className="text-base">Your order information.</span>
+              </div>
+              <Badge
+                className={cn(
+                  `text-sm font-semibold px-4 `,
+                  isOrderSuccess
+                    ? `bg-green-500 text-white`
+                    : `bg-red-500 text-white`
+                )}
+              >
+                {isOrderSuccess ? <span>Confirmed</span> : <span>Failed</span>}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <Separator />
+          <CardContent className="pt-3">
+            <div className="flex items-center gap-2">
+              <LayoutDashboard size={20} />
+              <h2 className="text-base font-medium">Order reference:</h2>
+              <Link href="/" className="underline">
+                {paymentSession.metadata.orderId}
+              </Link>
             </div>
-            <Badge
-              className={cn(
-                `text-sm font-semibold px-4 `,
-                isOrderSuccess
-                  ? `bg-green-500 text-white`
-                  : `bg-red-500 text-white`
-              )}
+            <div className="flex items-center gap-2 mt-2">
+              <LayoutDashboard size={20} />
+              <h2 className="text-base font-medium">Payment status:</h2>
+              <Link href="/" className="underline">
+                {isOrderSuccess ? <span>Paid</span> : <span>Unpaid</span>}
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+        {isOrderSuccess ? (
+          <Button asChild className="mt-6">
+            <Link
+              href={`/order-status/${paymentSession.metadata.orderId}?restaurantId=${restaurantId}`}
+              className="flex items-center gap-2"
             >
-              {isOrderSuccess ? <span>Confirmed</span> : <span>Failed</span>}
-            </Badge>
-          </CardTitle>
-        </CardHeader>
-        <Separator />
-        <CardContent className="pt-3">
-          <div className="flex items-center gap-2">
-            <LayoutDashboard size={20} />
-            <h2 className="text-base font-medium">Order reference:</h2>
-            <Link href="/" className="underline">
-              {paymentSession.metadata.orderId}
+              <ArrowLeft size={20} className="text-white" />
+              <span>Go to order status page</span>
             </Link>
-          </div>
-          <div className="flex items-center gap-2 mt-2">
-            <LayoutDashboard size={20} />
-            <h2 className="text-base font-medium">Payment status:</h2>
-            <Link href="/" className="underline">
-              {isOrderSuccess ? <span>Paid</span> : <span>Unpaid</span>}
+          </Button>
+        ) : (
+          <Button asChild className="mt-6">
+            <Link
+              href={`/checkout?restaurantId=${restaurantId}`}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft size={20} className="text-white" />
+              <span>Go to checkout</span>
             </Link>
-          </div>
-        </CardContent>
-      </Card>
-      {isOrderSuccess ? (
-        <Button asChild className="mt-6">
-          <Link
-            href={`/order-status/${paymentSession.metadata.orderId}?restaurantId=${restaurantId}`}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft size={20} className="text-white" />
-            <span>Go to order status page</span>
-          </Link>
-        </Button>
-      ) : (
-        <Button asChild className="mt-6">
-          <Link
-            href={`/checkout?restaurantId=${restaurantId}`}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft size={20} className="text-white" />
-            <span>Go to checkout</span>
-          </Link>
-        </Button>
-      )}
-    </div>
+          </Button>
+        )}
+      </div>
+    </>
   );
 };
 
