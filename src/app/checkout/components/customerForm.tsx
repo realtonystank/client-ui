@@ -29,6 +29,7 @@ import OrderSummary from "./orderSummary";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useSearchParams } from "next/navigation";
 import { clearCart } from "@/lib/store/features/cart/cartSlice";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   address: z.string({ required_error: "Please select an address" }),
@@ -41,6 +42,7 @@ const formSchema = z.object({
 const CustomerForm = () => {
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { data: customer, isPending } = useQuery<Customer>({
     queryKey: ["customer"],
     queryFn: async () => {
@@ -64,7 +66,12 @@ const CustomerForm = () => {
     onSuccess: async (data) => {
       const cashfree = await load({ mode: "sandbox" });
       console.log("data in after success - ", data);
-      if (cashfree && data.session) {
+      if (
+        cashfree &&
+        data.session &&
+        data.session.paymentMode &&
+        data.session.paymentMode !== "cash"
+      ) {
         const checkoutOptions = {
           paymentSessionId: data.session.id,
           redirectTarget: "_self",
@@ -73,6 +80,7 @@ const CustomerForm = () => {
       } else {
         alert("Order placed successfully!");
         dispatch(clearCart());
+        router.push(`/?restaurantId=${data.session.tenantId}`);
       }
     },
     retry: 3,
