@@ -26,8 +26,9 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import OrderSummary from "./orderSummary";
-import { useAppSelector } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { useSearchParams } from "next/navigation";
+import { clearCart } from "@/lib/store/features/cart/cartSlice";
 
 const formSchema = z.object({
   address: z.string({ required_error: "Please select an address" }),
@@ -39,6 +40,7 @@ const formSchema = z.object({
 
 const CustomerForm = () => {
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
   const { data: customer, isPending } = useQuery<Customer>({
     queryKey: ["customer"],
     queryFn: async () => {
@@ -68,6 +70,9 @@ const CustomerForm = () => {
           redirectTarget: "_self",
         };
         cashfree.checkout(checkoutOptions);
+      } else {
+        alert("Order placed successfully!");
+        dispatch(clearCart());
       }
     },
     retry: 3,
